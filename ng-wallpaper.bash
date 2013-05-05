@@ -124,7 +124,7 @@ then
 fi
 echo "Downloading wallpaper file $photo_url"
 
-$download_tool $photo_url $download_output_arg $download_output_file
+$download_tool $photo_url $download_output_arg $download_output_file || exit $!
 wallpaper_file="`pwd -P`/wallpaper.${download_output_file##*.}"
 if [[ $save_file != 'y' ]] ; then 
 	mv $download_output_file "$wallpaper_file"
