@@ -44,6 +44,18 @@ On Ubuntu 12.10, just execute it from shell:
 
 And check your wallpaper now.
 
+To update wallpaper at login, execute
+
+    gnome-session-properties
+
+from dash home or shell, then add a new item
+
+    Name:       Wallpaper Changer
+    Command:    /path/to/the/ng-wallpaper
+    Comment:    Download photo from NG website and set as wallpaper
+
+You can set Name and Comment texts as you like.
+
 Troubleshooting
 -------------------
 
