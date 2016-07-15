@@ -3,7 +3,7 @@
 #TODO
 # add option to change background fill mode
 
-photo_page="http://photography.nationalgeographic.com/photography/photo-of-the-day"
+photo_page="http://photography.nationalgeographic.com/photography/photo-of-the-day/"
 user_page=""
 download_tool="curl -s"
 download_output_arg="-o "
@@ -11,10 +11,9 @@ save_file=""
 gnome_version=3
 ng_last_record=~/.ng_last_wallpaper
 
-trait_regex='<a[^>]*>\s*Download Wallpaper[^<]*</a>'
+trait_regex='<img[^>]+src="[^"]+.jpg"[^>]+width="9[0-9][0-9]"[^>]*/>'
 
 force='n'
-fallback_regex='<img[^>]+src="[^"]+.jpg"[^>]+width="9[0-9][0-9]"[^>]*/>'
 
 my_name=`basename $0`
 
@@ -68,6 +67,13 @@ function setwallpaper() {
 	esac
 }
 
+# Add 'http:' to url if no protocol specified
+function addprotocol() {
+    url_str=$1
+    if ! echo $url_str | grep -iq "http" ; then url_str="http:$url_str" ; fi
+    echo $url_str
+}
+
 # Parse options 
 TEMP=`getopt -o 23fhl:nsu: -n "${my_name}" -- "$@"`
 
@@ -95,11 +101,10 @@ then
 fi
 # Options over 
 
-# Add 'http://' to url if no protocol specified
-if echo $photo_page | grep -iq '^\w+://' ; then photo_page="http://"$photo_page ; fi
 
 # Get wallpaper download link
-photo_url=`$download_tool "$photo_page" | grep -oi "$trait_regex" | sed -ne '/.*href="\([^"]\+\)".*/s//\1/p'`
+photo_url=`$download_tool "$photo_page" | grep -Eoi "$trait_regex" | sed -ne '/.*src="\([^"]\+\)".*/s//\1/p'`
+photo_url=$(addprotocol $photo_url)
 
 if [[ -z $photo_url ]] 
 then
